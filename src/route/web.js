@@ -10,7 +10,9 @@ const route = express.Router();
 const initWebRoute = (app) => {
 
     route.get("/",userController.handleHomePage);
-    route.get('/user',userController.handleGetUser);
+    route.get('/user', userController.handleGetUser);
+    
+    route.post("/create-user", userController.handleCreateUser);
 
     app.use('/',route)
 }
