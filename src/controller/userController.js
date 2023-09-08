@@ -1,12 +1,4 @@
-import mysql from 'mysql2'
-import bcrypt from 'bcryptjs';
-var salt = bcrypt.genSaltSync(10)
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'jwt'
-});
+import userService from '../services/userService'
   
 
 let handleGetUser = (req, res) => {
@@ -17,15 +9,9 @@ let handleHomePage = (req, res) => {
     res.send('Home page');
 }
 
-let handleCreateUser = (req, res) => {
-    
+let handleCreateUser = (req, res) => {  
     let user = req.body
-    // console.log("Check user: ", req.body)
-    let hashPassword = bcrypt.hashSync(user.password, salt)
-    connection.query(
-        'INSERT INTO users(username,password,email) values (?,?,?)',
-        [user.username, hashPassword, user.email]
-    );
+    let info = userService.handleCreateNewUser(user);
     res.send("Create user succeed!")
 }
 
