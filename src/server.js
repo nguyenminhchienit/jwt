@@ -1,7 +1,8 @@
 import express from 'express'
-import configViewEngine from './configs/viewEngine'
+import configViewEngine from './config/viewEngine'
 import initWebRoute from './route/web'
 import bodyParser from 'body-parser';
+import connection from './config/connectDB';
 
 const app = express();
 // support parsing of application/json type post data
@@ -14,6 +15,8 @@ const PORT = process.env.PORT || 8080
 
 
 configViewEngine(app);
+
+connection();
 
 initWebRoute(app);
 
