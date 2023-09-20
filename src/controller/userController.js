@@ -8,7 +8,7 @@ let handleGetUser = async (req, res) => {
 
 let handleHomePage = async (req, res) => {    
     let data = await userService.handleGetUser();
-    console.log("Check data: ", data);
+    // console.log("Check data: ", data);
     res.send('Home page');
 }
 
@@ -34,7 +34,7 @@ let handleGetUserById = async (req, res) => {
 
 let handleUpdateUserById = async (req, res) => {
     const user = req.body;
-    console.log("Check body: ", user);
+    // console.log("Check body: ", user);
     await userService.handleUpdateUserById(user);
     res.redirect("/user");
 }
