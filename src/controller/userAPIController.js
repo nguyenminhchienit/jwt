@@ -37,8 +37,25 @@ let handleUpdate = (req, res) => {
     
 }
 
-let handleDelete = (req, res) => {
-    
+let handleDelete = async (req, res) => {
+    let data = {};
+    try {
+        console.log("Check delete: ",req.body);
+        let data = await userAPIService.deleteUser(req.body.id);
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        })
+        
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EM: "Error from server",
+            EC: -1,
+            DT: ''
+        })
+    }
 }
 
 module.exports = {
