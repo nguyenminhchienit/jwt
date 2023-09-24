@@ -20,7 +20,7 @@ const getAllUser = async () => {
         return {
             EM: "Something wrong service",
             EC: 1,
-            DT: users
+            DT: []
         };
     }
 }
@@ -88,8 +88,35 @@ const deleteUser = async (id) => {
     }
 }
 
+const handleCreateUser = async (data) => {
+    let users = [];
+    try {
+        const dataUser = await db.User.create(data)
+        if (!dataUser) {
+            return {
+                EM: "Create user failed",
+                EC: 0,
+                DT: []
+            };
+        }
+        return {
+            EM: "Create user succeed",
+            EC: 0,
+            DT: []
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            EM: "Something wrong service",
+            EC: 1,
+            DT: []
+        };
+    }
+}
+
 module.exports = {
     getAllUser,
     getUserWithPagination,
-    deleteUser
+    deleteUser,
+    handleCreateUser
 }
