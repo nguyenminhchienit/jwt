@@ -1,4 +1,5 @@
 import db from '../models'
+import {checkMailUser, checkPhoneUser, hashPassword} from './loginRegisterService'
 
 const getAllUser = async () => {
     let users = [];
@@ -32,7 +33,7 @@ const getUserWithPagination = async (page, limit) => {
             offset: offset,
             limit: limit,
             attributes: ['email', 'username', 'address', 'sex', 'phone','id'],
-            include: {model: db.Group, attributes: ['name','description']}
+            include: {model: db.Group, attributes: ['name','description','id']}
         });
         let totalPage = Math.ceil(count / limit);
         let data = {
@@ -50,7 +51,7 @@ const getUserWithPagination = async (page, limit) => {
         return {
             EM: "Something wrong service",
             EC: 1,
-            DT: users
+            DT: []
         };
     }
 }
@@ -88,10 +89,72 @@ const deleteUser = async (id) => {
     }
 }
 
-const handleCreateUser = async (data) => {
-    let users = [];
+const handleUpdateUser = async (data) => {
     try {
-        const dataUser = await db.User.create(data)
+        if (!data.groupId) {
+            return {
+                EM: "Không được để trống trường group",
+                EC: 3,
+                DT: 'group'
+            }
+        }
+        const user = await db.User.findOne({
+            where: {
+                id: data.id,
+            }
+        })
+        if (user) {
+            await user.update({
+                username: data.username,
+                address: data.address,
+                sex: data.sex,
+                groupId: data.groupId
+            })
+
+            return {
+                EM: "Cập nhật người dùng thành công",
+                EC: 0,
+                DT: []
+            };
+        } else {
+            return {
+                EM: "Không tìm thấy người dùng",
+                EC: 2,
+                DT: []
+            };
+        }
+        
+    } catch (e) {
+        console.log(e);
+        return {
+            EM: "Something wrong service",
+            EC: 1,
+            DT: []
+        };
+    }
+}
+
+const handleCreateUser = async (data) => {
+    try {
+        let checkMail = await checkMailUser(data.email);
+        if (checkMail === true) {
+            return {
+                EM: "Email này đã tồn tại, vui lòng chọn email khác",
+                EC: 2,
+                DT: 'email'
+            }
+        }
+        let checkPhone = await checkPhoneUser(data.phone);
+        if (checkPhone === true) {
+            return {
+                EM: "Số điện này đã tồn tại",
+                EC: 3,
+                DT: 'phone'
+            }
+        }
+
+        const hashPasswordUser = hashPassword(data.password);
+        const dataUser = await db.User.create({...data, password: hashPasswordUser})
         if (!dataUser) {
             return {
                 EM: "Create user failed",
@@ -118,5 +181,6 @@ module.exports = {
     getAllUser,
     getUserWithPagination,
     deleteUser,
-    handleCreateUser
+    handleCreateUser,
+    handleUpdateUser
 }

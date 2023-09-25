@@ -113,5 +113,9 @@ const loginUser = async (data) => {
 
 module.exports = {
     registerNewUser,
-    loginUser
+    loginUser,
+    hashPassword,
+    checkMailUser,
+    checkPhoneUser
+
 }
