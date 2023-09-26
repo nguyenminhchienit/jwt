@@ -1,6 +1,9 @@
 import db from "../models";
 import bcrypt, { hash } from 'bcryptjs';
 import { Op } from "sequelize";
+import { getGroupWithRoles } from './JWTService'
+import { createJWT } from '../middleware/JWTAction'
+require('dotenv').config();
 
 const checkMailUser = async (email) => {
     try {
@@ -64,7 +67,8 @@ const registerNewUser = async (user) => {
         email: user.email,
         phone: user.phone,
         username: user.username,
-        password: hashPasswordUser
+        password: hashPasswordUser,
+        groupId: 4
     })
 
     return {
@@ -92,10 +96,21 @@ const loginUser = async (data) => {
         if (user) {
             const isCheckPassword = checkPassword(data.password, user.password);
             if (isCheckPassword === true) {
+                let groupWithRoles = await getGroupWithRoles(user);
+                let payload = {
+                    email: user.email,
+                    groupWithRoles,
+                    expiresIn: process.env.JWT_EXPRIRES_IN
+                }
+                let token = createJWT(payload);
+                console.log("Check token: ",token)
                 return {
                     EM: "Đăng nhập thành công",
                     EC: 0,
-                    DT: user
+                    DT: {
+                        access_token: token,
+                        groupWithRoles
+                    }
                 }
             }
         }
