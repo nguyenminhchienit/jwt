@@ -2,8 +2,8 @@ import userAPIService from '../services/userAPIService'
 
 let handleRead = async (req, res) => {
     let data = {};
+    console.log("Check cookie: ", req.cookies)
     try {
-        console.log("Check req: ",req.query.page, req.query.limit)
         if (req.query.page && req.query.limit) {
             let page = req.query.page;
             let limit = req.query.limit;
@@ -11,8 +11,6 @@ let handleRead = async (req, res) => {
         } else {
             data = await userAPIService.getAllUser(); 
         }
-
-        console.log(data)
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,

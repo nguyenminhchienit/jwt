@@ -3,6 +3,7 @@ import configViewEngine from './config/viewEngine'
 import initWebRoute from './route/web'
 import initAPIRoute from './route/api'
 import bodyParser from 'body-parser';
+import cookieParser  from 'cookie-parser'
 import connection from './config/connectDB';
 import configCors from './config/configCors';
 
@@ -21,6 +22,9 @@ configCors(app);
 configViewEngine(app);
 
 // connection();
+
+//cookie parser
+app.use(cookieParser())
 
 
 initAPIRoute(app);
