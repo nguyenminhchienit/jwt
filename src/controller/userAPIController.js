@@ -2,7 +2,7 @@ import userAPIService from '../services/userAPIService'
 
 let handleRead = async (req, res) => {
     let data = {};
-    console.log("Check cookie: ", req.cookies)
+    console.log("Check user: ", req.user)
     try {
         if (req.query.page && req.query.limit) {
             let page = req.query.page;
@@ -86,9 +86,21 @@ let handleDelete = async (req, res) => {
     }
 }
 
+const getUserAccount = async (req, res) => {
+    return res.status(200).json({
+        EM: 'OK',
+        EC: 0,
+        DT: {
+            access_token: req.token,
+            ...req.user
+        }
+    })
+}
+
 module.exports = {
     handleCreate,
     handleDelete,
     handleRead,
-    handleUpdate
+    handleUpdate,
+    getUserAccount
 }

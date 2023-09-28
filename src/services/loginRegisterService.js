@@ -5,6 +5,8 @@ import { getGroupWithRoles } from './JWTService'
 import { createJWT } from '../middleware/JWTAction'
 require('dotenv').config();
 
+
+
 const checkMailUser = async (email) => {
     try {
         let userEmail = await db.User.findOne({
@@ -100,16 +102,17 @@ const loginUser = async (data) => {
                 let payload = {
                     email: user.email,
                     groupWithRoles,
-                    expiresIn: process.env.JWT_EXPRIRES_IN
+                    username: user.username,
                 }
                 let token = createJWT(payload);
-                console.log("Check token: ",token)
                 return {
                     EM: "Đăng nhập thành công",
                     EC: 0,
                     DT: {
                         access_token: token,
-                        groupWithRoles
+                        groupWithRoles,
+                        email: user.email,
+                        username: user.username
                     }
                 }
             }
