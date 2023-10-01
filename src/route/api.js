@@ -17,6 +17,7 @@ const initAPIRoute = (app) => {
     
     route.post("/register", apiController.handleRegister);
     route.post("/login", apiController.handleLogin)
+    route.post("/logout", apiController.handleLogout)
     
     route.get("/account", userAPIController.getUserAccount);
     route.get("/user/read", userAPIController.handleRead);

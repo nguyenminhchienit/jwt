@@ -41,9 +41,10 @@ const handleLogin = async (req, res) => {
         } 
 
         let data = await loginRegisterService.loginUser(user);
-        if (data && data.DT && data.DT.access_token) {            
+        if (data && data.DT && data.DT.access_token) {
+            //luu vao cookies
             res.cookie('jwt', data.DT.access_token, { httpOnly: true, maxAge: 60 * 60 * 1000 })
-        }
+        }  
         
         return res.status(200).json({
             EM: data.EM,
@@ -61,7 +62,27 @@ const handleLogin = async (req, res) => {
     }
 }
 
+const handleLogout = (req, res) => {
+    try {
+        res.clearCookie('jwt');
+        return res.status(200).json({
+            EM: "Xóa cookies thành công",
+            EC: 0,
+            DT: ''
+        })
+        
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EM: "Error from server",
+            EC: -1,
+            DT: ''
+        })
+    }
+}
+
 module.exports = {
     handleRegister,
-    handleLogin
+    handleLogin,
+    handleLogout
 }
